@@ -1,3 +1,6 @@
+
+public class Cache {
+
 import java.util.*;
 
 public class Cache
@@ -69,6 +72,42 @@ public class Cache
         }
 
         return total;
+
+    }
+  
+    public int getCacheSize() {
+        return this.cacheSize;
+    }
+
+    public int getBlockSize() {
+        return this.blockSize;
+    }
+
+    public int getSetSize() {
+        return this.setSize;
+    }
+
+    public int getCacheHit() {
+        return this.cacheHit;
+    }
+
+    public int getCacheMiss() {
+        return this.cacheMiss;
+    }
+
+    public float getMissPenalty() {
+        return this.missPenalty;
+    }
+
+    public ArrayList<ArrayList<Integer>> getCache() {
+        return this.cache;
+    }
+
+    public void saveSnapshot() {
+
+    }
+
+    public void saveFile() {
 
     }
 
