@@ -11,8 +11,9 @@ public class Driver {
         data: 200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4
         set size: none
         */
-        String input = "200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4"
+        String input = "200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4";
         
+        input = input.replaceAll("\\s+","");
         List<String> data = Arrays.asList(input.split(","));
 
         Cache item4_C = new Cache(32,8,0,false,1);   // cache size, blocks, set size, isLT?, access time
