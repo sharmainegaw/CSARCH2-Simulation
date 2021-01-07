@@ -60,8 +60,8 @@ public class Cache {
 
         printCache(cache);
     }
-
-    private void insert(String strData)
+    
+    public void insert(String strData)
     {
         // convert from hex address to decimal address
         int nTempData = (int) Long.parseLong(strData, 16);

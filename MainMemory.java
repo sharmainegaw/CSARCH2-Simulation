@@ -1,27 +1,32 @@
+import java.util.*;
+
 public class MainMemory
 {
     private float accessTime;
     private int size;
-    private String[] data;
+    private List<String> data;
 
     public MainMemory(float accessTime) {
-        this.accessTime = accessTime
+        this.accessTime = accessTime;
     }
 
-    public void loadData(String[] data) {
+    public void loadData(List<String> data) {
         this.data = data;
     }    
 
     public void transferData(Cache cachemem) {
-        // for each i in data, cachemem.insertdata(i)
+        for (String element:data) {
+            cachemem.insert(element);
+            System.out.println("Inserted " + element);
+        }
     }
 
     public float getAccessTime() {
-        return accessTime
+        return accessTime;
     }
 
     public int getSize() {
-        return size
+        return size;
     }
     
 }

@@ -1,4 +1,8 @@
+import java.util.*;
+
 public class Driver {
+    
+
     public static void main(String[] args)
     {
        /* 
@@ -7,14 +11,14 @@ public class Driver {
         data: 200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4
         set size: none
         */
-       String[] data = {"200","204","208","20C","2F4","2F0","200","204","218","21C","24C","2F4"};
-       Cache item4_C = new Cache(32,8,0,false,1);   // cache size, blocks, set size, isLT?, access time
-       MainMemory  item4_MM = new MainMemory(1);     // access time
-       item4_MM.loadData(data);
+        String input = "200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4";
+        
+        input = input.replaceAll("\\s+","");
+        List<String> data = Arrays.asList(input.split(","));
 
-       item4_C.simulate(data);
-
-       // item4_MM.transferData(item4_C);
-
+        Cache item4_C = new Cache(32,8,0,false,1);   // cache size, blocks, set size, isLT?, access time
+        MainMemory  item4_MM = new MainMemory(1);     // access time
+        item4_MM.loadData(data);
+        item4_MM.transferData(item4_C);
     }
 }
