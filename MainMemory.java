@@ -12,7 +12,7 @@ public class MainMemory
 
     public void loadData(List<String> data) {
         this.data = data;
-    }    
+    }
 
     public void transferData(Cache cachemem) {
         for (String element:data) {
@@ -28,5 +28,5 @@ public class MainMemory
     public int getSize() {
         return size;
     }
-    
+
 }
