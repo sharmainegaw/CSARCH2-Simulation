@@ -4,7 +4,7 @@ import java.util.Collections;
 public class Cache {
     private int nMinIndex = -1, nMaxIndex = -1;
 
-    private int cacheSize;
+    private int cacheSize; // number of blocks in the entire cache, not words
     private int blockSize;
     private int setSize;
     private int numberOfSets;
@@ -53,21 +53,36 @@ public class Cache {
         }
     }
 
-    public void simulate(String[] data)
+    public void simulate(String[] data, boolean dataIsInBlocks, boolean dataIsInHexAddress)
     {
+        int[] tempData = new int[data.length];
+
+        if(!dataIsInBlocks)
+        {
+            if(dataIsInHexAddress)
+                for(int i = 0; i < data.length; i++)
+                {
+                    // convert from hex to decimal, then convert to blocks
+                    tempData[i] = convertAddressToBlock(convertHexToDecimal(data[i]));
+                }
+        }
+        else {
+            for (int i = 0; i < data.length; i++) {
+                tempData[i] = Integer.parseInt(data[i]);
+            }
+        }
+
+
         for(int i = 0; i < data.length; i++)
-            insert(data[i]);
+            insert(data[i], tempData[i]);
 
         printCache(cache);
     }
 
-    private void insert(String strData)
+    private void insert(String strData, int nData)
     {
-        // convert from hex address to decimal address
-        int nTempData = (int) Long.parseLong(strData, 16);
-
         // get the set the block belongs to
-        int nSet = calculateSet(nTempData);
+        int nSet = convertBlockToSet(nData);
 
         // get index of youngest and oldest
         nMinIndex = age[nSet].indexOf(Collections.min(age[nSet]));
@@ -80,15 +95,15 @@ public class Cache {
         {
             int nNextIndex = age[nSet].indexOf(0);
 
-            // If set is full, replace data with youngest age
+            // If set is full, replace the block with the youngest age
             if (nNextIndex == -1)
                 cache[nSet].set(nMinIndex, strData);
+                // else, just fill the next empty block
             else
                 cache[nSet].set(nNextIndex, strData);
 
-            // set the age as highest + 1
+            // set the new age as highest + 1
             age[nSet].set(nMinIndex, ((int)age[nSet].get(nMaxIndex) + 1));
-
             // increment cache miss
             cacheMiss++;
         }
@@ -100,8 +115,18 @@ public class Cache {
         }
     };
 
-    private int calculateSet(int nData){
-        return ((nData  + 1)/ blockSize) % numberOfSets;
+    private int convertHexToDecimal(String dataInHex)
+    {
+        return (int) Long.parseLong(dataInHex, 16);
+    }
+
+    private int convertAddressToBlock(int dataInAddress)
+    {
+        return (dataInAddress + 1)/blockSize;
+    }
+
+    private int convertBlockToSet(int dataInBlocks){
+        return dataInBlocks % numberOfSets;
     }
 
     private int isCacheHit(int nSet, String strData){
