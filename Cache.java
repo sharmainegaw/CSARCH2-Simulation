@@ -8,6 +8,7 @@ public class Cache {
     private int blockSize;
     private int setSize;
     private int numberOfSets;
+    private int nLoop;
 
     private int cacheHit;
     private int cacheMiss;
@@ -53,7 +54,7 @@ public class Cache {
         }
     }
 
-    public void simulate(String[] data, boolean dataIsInBlocks, boolean dataIsInHexAddress)
+    public void simulate(String[] data, int nLoop, boolean dataIsInBlocks, boolean dataIsInHexAddress)
     {
         int[] tempData = new int[data.length];
 
@@ -72,10 +73,19 @@ public class Cache {
             }
         }
 
+        for(int i = 0; i < nLoop; i++)
+        {
+            System.out.println("LOOP " + (i + 1));
 
-        for(int i = 0; i < data.length; i++)
-            insert(data[i], tempData[i]);
+            for(int j = 0; j < data.length; j++)
+                insert(data[j], tempData[j]);
 
+            System.out.println("END OF LOOP " + (i + 1));
+
+            System.out.println("********************************************");
+        }
+
+        System.out.println("FINAL CACHE: ");
         printCache(cache);
     }
 
