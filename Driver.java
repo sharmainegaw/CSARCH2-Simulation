@@ -1,10 +1,13 @@
 import java.util.*;
+import javafx.event.*;
 
 public class Driver {
-    
 
     public static void main(String[] args)
     {
+        GUI gui = new GUI();
+        Controller controller = new Controller(gui);
+
         String[] data = {"200","204","208","20C","2F4","2F0","200","204","218","21C","24C","2F4"};
         String[] dataInBlocks = {"21", "27", "25", "20", "29", "27", "21", "25", "30", "30"};
         int nLoop = 2;

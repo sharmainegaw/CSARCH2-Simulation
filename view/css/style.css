@@ -1,0 +1,11 @@
+.root {
+    -fx-font-family: 'Helvetica', Arial, sans-serif;
+    -fx-font-size: 14;
+    -fx-background-color: #ffffff;
+}
+
+.startbtn{
+    -fx-background-color: #2c3553;
+    -fx-text-fill: white;
+    -fx-font-family: 'Helvetica', Arial, sans-serif;
+}

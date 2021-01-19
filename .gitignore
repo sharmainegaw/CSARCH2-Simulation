@@ -2,3 +2,5 @@ Cache.class
 Driver.class
 MainMemory.class
 Driver.class
+GUI.class
+Controller.class
