@@ -19,7 +19,7 @@ public class GUI extends Application {
 
     @FXML
     private ComboBox cacheSizeDT, mainMemoryDT, dataType, numOfLoops;
-    
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
@@ -41,6 +41,7 @@ public class GUI extends Application {
     public static void run() {
         launch();
     }
+
 
     public int getCacheSize(){ return Integer.parseInt(cacheSize.getText()); }
 
