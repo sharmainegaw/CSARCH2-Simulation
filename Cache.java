@@ -16,8 +16,8 @@ public class Cache {
     private float cacheAccessTime;
     private float missPenalty;
 
-    private ArrayList<String>[] cache;
-    private ArrayList<Integer>[] age;
+    private ArrayList<ArrayList<String>> cache;
+    private ArrayList<ArrayList<Integer>> age;
 
     public Cache(int cacheSize, int blockSize, int setSize, boolean isLT, float CacheAccessTime) {
         this.cacheSize = cacheSize;
@@ -36,16 +36,16 @@ public class Cache {
     }
 
     private void initialize() {
-        cache = new ArrayList[numberOfSets];
-        age = new ArrayList[numberOfSets];
+        age = new ArrayList<ArrayList<Integer>>(numberOfSets);
+        cache = new ArrayList<ArrayList<String>>(numberOfSets);
 
         for (int i = 0; i < numberOfSets; i++) {
-            cache[i] = new ArrayList<>(setSize);
-            age[i] = new ArrayList<>(setSize);
+            cache.set(i, new ArrayList<String>(setSize));
+            age.set(i, new ArrayList<Integer>(setSize));
 
             for (int j = 0; j < setSize; j++) {
-                age[i].add((int) 0);
-                cache[i].add("");
+                age.get(i).add((int) 0);
+                cache.get(i).add("");
             }
         }
     }
@@ -81,35 +81,39 @@ public class Cache {
     }
 
     void insert(String strData, int nData) {
+        System.out.println("Inserting " + strData);
+
         // get the set the block belongs to
         int nSet = convertBlockToSet(nData);
 
         // get index of youngest and oldest
-        nMinIndex = age[nSet].indexOf(Collections.min(age[nSet]));
-        nMaxIndex = age[nSet].indexOf(Collections.max(age[nSet]));
+        nMinIndex = age.get(nSet).indexOf(Collections.min(age.get(nSet)));
+        nMaxIndex = age.get(nSet).indexOf(Collections.max(age.get(nSet)));
 
         int cacheIndex = isCacheHit(nSet, strData);
 
         // If cache miss
         if (cacheIndex == -1) {
-            int nNextIndex = age[nSet].indexOf(0);
+            int nNextIndex = age.get(nSet).indexOf(0);
 
             // If set is full, replace the block with the youngest age
             if (nNextIndex == -1)
-                cache[nSet].set(nMinIndex, strData);
+                cache.get(nSet).set(nMinIndex, strData);
             // else, just fill the next empty block
             else
-                cache[nSet].set(nNextIndex, strData);
+                cache.get(nSet).set(nNextIndex, strData);
 
             // set the new age as highest + 1
-            age[nSet].set(nMinIndex, ((int) age[nSet].get(nMaxIndex) + 1));
+            age.get(nSet).set(nMinIndex, ((int) age.get(nSet).get(nMaxIndex) + 1));
             // increment cache miss
             cacheMiss++;
         } else {
-            age[nSet].set(cacheIndex, ((int) age[nSet].get(nMaxIndex) + 1));
+            age.get(nSet).set(cacheIndex, ((int) age.get(nSet).get(nMaxIndex) + 1));
             // increment cache hit
             cacheHit++;
         }
+
+        printCache(cache);
     };
 
     private int convertHexToDecimal(String dataInHex) {
@@ -125,7 +129,7 @@ public class Cache {
     }
 
     private int isCacheHit(int nSet, String strData) {
-        return cache[nSet].indexOf(strData);
+        return cache.get(nSet).indexOf(strData);
     }
 
     public float computeAverage() {
@@ -183,7 +187,7 @@ public class Cache {
         return this.missPenalty;
     }
 
-    public ArrayList<String>[] getCache() {
+    public ArrayList<ArrayList<String>> getCache() {
         return this.cache;
     }
 
@@ -195,12 +199,12 @@ public class Cache {
 
     }
 
-    private void printCache(ArrayList[] list) {
-        for (int i = 0; i < list.length; i++) {
+    private void printCache(ArrayList<ArrayList<String>> list) {
+        for (int i = 0; i < list.size(); i++) {
             System.out.println("Set " + i);
-            for (int j = 0; j < list[i].size(); j++) {
+            for (int j = 0; j < list.get(i).size(); j++) {
                 System.out.print("\tBlock " + j + " - ");
-                System.out.println(list[i].get(j));
+                System.out.println(list.get(i).get(j));
             }
         }
     }
