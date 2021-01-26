@@ -32,19 +32,6 @@ public class Controller extends Application {
     @FXML
     private ToggleGroup loadthrough;
 
-    @FXML
-    private TableView<CacheData> output;
-
-    @FXML
-    private TableColumn cacheset, cacheblock, cachedata;
-
-    // @FXML
-    // private TableColumn<CacheData, String> set;
-    // @FXML
-    // private TableColumn<CacheData, String> block;
-    // @FXML
-    // private TableColumn<CacheData, String> data;
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -78,34 +65,13 @@ public class Controller extends Application {
             
             startbtn.getScene().setRoot(root);
 
-            //cache();
+            OutputController outputController = (OutputController) loader.getController();
+            outputController.initializeTable();
 
-            /** CacheData testdata = new CacheData("hi", "hello", "bye");
-            output.setItems(testdata);
-            */
-            
-            final ObservableList<CacheData> obvlistdata = FXCollections.observableArrayList(
-                new CacheData("Jacob", "Smith", "jacob.smith@example.com")
-            ); 
-            
-            output.setItems(obvlistdata); //set, block, data
-            
-            System.out.println("is this null -> " + output);
+            cache();
 
-            /**TableColumn<CacheData, String> column1 = new TableColumn<>("Set");
-            column1.setCellValueFactory(new PropertyValueFactory<>("set"));
-
-            TableColumn<CacheData, String> column2 = new TableColumn<>("Block");
-            column2.setCellValueFactory(new PropertyValueFactory<>("block"));
-
-            TableColumn<CacheData, String> column3 = new TableColumn<>("Data");
-            column3.setCellValueFactory(new PropertyValueFactory<>("data"));
-
-            output.getColumns().add(column1);
-            output.getColumns().add(column2);
-            output.getColumns().add(column3);
-            output.getItems().add(new CacheData("hi", "hello", "bye"));*/
-
+            // outputController.setCache(cache);
+            // outputController.setMainMemory(mm);
 
         } catch (final Exception e) {
             e.printStackTrace();
@@ -129,13 +95,30 @@ public class Controller extends Application {
 
         if(isValidSize(getCacheSize(), getMainMemorySize()))
         {
-            
-            Cache testCache = new Cache(getCacheSize(), getBlockSize(), getSetSize(), isLT(), getCacheAccessTime());   // cache size, blocks, set size, isLT?, access time
-            MainMemory testMM = new MainMemory(getMainMemoryAccessTime());     // access time
-            testMM.loadData(getData());
+            cache = new Cache(getCacheSize(), getBlockSize(), getSetSize(), isLT(), getCacheAccessTime());   // cache size, blocks, set size, isLT?, access time
+            mm = new MainMemory(getMainMemoryAccessTime());     // access time
+            mm.loadData(getData());
 
-            testCache.simulate(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
+            cache.simulate(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
         }
+    }
+
+    private void testPrintValues()
+    {
+        System.out.println("cache size: " + getCacheSize());
+        System.out.println("main memory size: " + getCacheSize());
+
+        System.out.println("set size: " + getSetSize());
+        System.out.println("block size: " + getBlockSize());
+        System.out.println("cache access time: " + getCacheAccessTime());
+        System.out.println("main memory access time: " + getMainMemoryAccessTime());
+
+        String[] data = getData();
+        System.out.println("data: ");
+        for(int i = 0; i < data.length; i++)
+            System.out.print(data[i] + " ");
+
+        System.out.println("\nnum of loops: " + getNumOfLoops());
     }
 
     private static Boolean isValidSize(int cacheSize, int mainMemorySize)
@@ -146,12 +129,12 @@ public class Controller extends Application {
     @FXML
     public int getCacheSize(){ return Integer.parseInt(cacheSize.getText()); }
 
-    //public String getCacheSizeDT { return cacheSizeDT.getValue(); }
+    public String getCacheSizeDT() { return cacheSizeDT.getValue().toString(); }
 
     @FXML
     public int getMainMemorySize(){ return Integer.parseInt(mainMemorySize.getText()); }
 
-    //public String getMainMemoryDT { return mainMemoryDT.getValue(); }
+    //public String getMainMemoryDT() { return mainMemoryDT.getValue(); }
 
     @FXML
     public int getSetSize(){ return Integer.parseInt(setSize.getText()); }
