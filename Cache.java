@@ -40,8 +40,11 @@ public class Cache {
         cache = new ArrayList<ArrayList<String>>(numberOfSets);
 
         for (int i = 0; i < numberOfSets; i++) {
-            cache.set(i, new ArrayList<String>(setSize));
-            age.set(i, new ArrayList<Integer>(setSize));
+            cache.add(new ArrayList<String>(setSize));
+            age.add(new ArrayList<Integer>(setSize));
+
+            //cache.set(i, new ArrayList<String>(setSize));
+            //age.set(i, new ArrayList<Integer>(setSize));
 
             for (int j = 0; j < setSize; j++) {
                 age.get(i).add((int) 0);
@@ -207,6 +210,12 @@ public class Cache {
                 System.out.println(list.get(i).get(j));
             }
         }
+    }
+
+    public void clear()
+    {
+        cache.clear();
+        age.clear();
     }
 
 }
