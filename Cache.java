@@ -43,44 +43,11 @@ public class Cache {
             cache.add(new ArrayList<String>(setSize));
             age.add(new ArrayList<Integer>(setSize));
 
-            //cache.set(i, new ArrayList<String>(setSize));
-            //age.set(i, new ArrayList<Integer>(setSize));
-
             for (int j = 0; j < setSize; j++) {
                 age.get(i).add((int) 0);
                 cache.get(i).add("");
             }
         }
-    }
-
-    public void simulate(String[] data, int nLoop, boolean dataIsInBlocks, boolean dataIsInHexAddress) {
-        int[] tempData = new int[data.length];
-
-        if (!dataIsInBlocks) {
-            if (dataIsInHexAddress)
-                for (int i = 0; i < data.length; i++) {
-                    // convert from hex to decimal, then convert to blocks
-                    tempData[i] = convertAddressToBlock(convertHexToDecimal(data[i]));
-                }
-        } else {
-            for (int i = 0; i < data.length; i++) {
-                tempData[i] = Integer.parseInt(data[i]);
-            }
-        }
-
-        for (int i = 0; i < nLoop; i++) {
-            System.out.println("LOOP " + (i + 1));
-
-            for (int j = 0; j < data.length; j++)
-                insert(data[j], tempData[j]);
-
-            System.out.println("END OF LOOP " + (i + 1));
-
-            System.out.println("********************************************");
-        }
-
-        System.out.println("FINAL CACHE: ");
-        printCache(cache);
     }
 
     void insert(String strData, int nData) {
@@ -115,19 +82,17 @@ public class Cache {
             // increment cache hit
             cacheHit++;
         }
-
-        printCache(cache);
     };
 
-    private int convertHexToDecimal(String dataInHex) {
+    public int convertHexToDecimal(String dataInHex) {
         return (int) Long.parseLong(dataInHex, 16);
     }
 
-    private int convertAddressToBlock(int dataInAddress) {
+    public int convertAddressToBlock(int dataInAddress) {
         return (dataInAddress + 1) / blockSize;
     }
 
-    private int convertBlockToSet(int dataInBlocks) {
+    public int convertBlockToSet(int dataInBlocks) {
         return dataInBlocks % numberOfSets;
     }
 
@@ -135,19 +100,26 @@ public class Cache {
         return cache.get(nSet).indexOf(strData);
     }
 
-    public float computeAverage() {
+    public float computeAverage(float memoryAccessTime) {
         int total = cacheHit + cacheMiss;
-
-        return (cacheHit / total * cacheAccessTime) + (cacheMiss / total * missPenalty);
+        System.out.println("Cache Hit " + Integer.toString(cacheHit));
+        System.out.println("Cache Miss " + Integer.toString(cacheMiss));
+        System.out.println("Cache Miss Penalty " + Float.toString(computeMissPenalty(memoryAccessTime)));
+        return (cacheHit / total * cacheAccessTime) + (cacheMiss / total * computeMissPenalty(memoryAccessTime));
     }
 
-    public void computeMissPenalty(float memoryAccessTime) {
+    public float computeMissPenalty(float memoryAccessTime) {
+        
+        float missPenalty;
+
         if (isLT) {
             missPenalty = cacheAccessTime + memoryAccessTime;
         } else // if(!isLT)
         {
             missPenalty = 2 * cacheAccessTime + blockSize * memoryAccessTime;
         }
+
+        return missPenalty;
     }
 
     public float computeTotal(float memoryAccessTime) {

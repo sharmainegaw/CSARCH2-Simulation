@@ -66,12 +66,16 @@ public class Controller extends Application {
             startbtn.getScene().setRoot(root);
 
             OutputController outputController = (OutputController) loader.getController();
-            outputController.initializeTable();
 
             cache();
 
-            // outputController.setCache(cache);
-            // outputController.setMainMemory(mm);
+            outputController.setCache(cache);
+            outputController.setMainMemory(mm);
+            outputController.setStringData(getData());
+            outputController.setIntegerData(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
+            outputController.setNumOfLoops(getNumOfLoops());
+
+            outputController.initializeTable();
 
         } catch (final Exception e) {
             e.printStackTrace();
@@ -98,8 +102,6 @@ public class Controller extends Application {
             cache = new Cache(getCacheSize(), getBlockSize(), getSetSize(), isLT(), getCacheAccessTime());   // cache size, blocks, set size, isLT?, access time
             mm = new MainMemory(getMainMemoryAccessTime());     // access time
             mm.loadData(getData());
-
-            cache.simulate(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
         }
     }
 
@@ -129,12 +131,8 @@ public class Controller extends Application {
     @FXML
     public int getCacheSize(){ return Integer.parseInt(cacheSize.getText()); }
 
-    public String getCacheSizeDT() { return cacheSizeDT.getValue().toString(); }
-
     @FXML
     public int getMainMemorySize(){ return Integer.parseInt(mainMemorySize.getText()); }
-
-    //public String getMainMemoryDT() { return mainMemoryDT.getValue(); }
 
     @FXML
     public int getSetSize(){ return Integer.parseInt(setSize.getText()); }
