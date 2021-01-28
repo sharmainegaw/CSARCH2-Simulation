@@ -19,7 +19,7 @@ public class Cache {
     private ArrayList<ArrayList<String>> cache;
     private ArrayList<ArrayList<Integer>> age;
 
-    public Cache(int cacheSize, int blockSize, int setSize, boolean isLT, float CacheAccessTime) {
+    public Cache(int cacheSize, int blockSize, int setSize, boolean isLT, float cacheAccessTime) {
         this.cacheSize = cacheSize;
         this.blockSize = blockSize;
         this.setSize = setSize;
@@ -51,7 +51,7 @@ public class Cache {
     }
 
     void insert(String strData, int nData) {
-        System.out.println("Inserting " + strData);
+        //System.out.println("Inserting " + strData);
 
         // get the set the block belongs to
         int nSet = convertBlockToSet(nData);
@@ -81,6 +81,7 @@ public class Cache {
             age.get(nSet).set(cacheIndex, ((int) age.get(nSet).get(nMaxIndex) + 1));
             // increment cache hit
             cacheHit++;
+            //System.out.println(cacheHit);
         }
     };
 
@@ -101,16 +102,14 @@ public class Cache {
     }
 
     public float computeAverage(float memoryAccessTime) {
-        int total = cacheHit + cacheMiss;
-        System.out.println("Cache Hit " + Integer.toString(cacheHit));
-        System.out.println("Cache Miss " + Integer.toString(cacheMiss));
-        System.out.println("Cache Miss Penalty " + Float.toString(computeMissPenalty(memoryAccessTime)));
+        float total = (float) (cacheHit + cacheMiss);
+        //System.out.println("Cache Hit " + Integer.toString(cacheHit));
+        //System.out.println("Cache Miss " + Integer.toString(cacheMiss));
+        //System.out.println("Cache Miss Penalty " + Float.toString(computeMissPenalty(memoryAccessTime)));
         return (cacheHit / total * cacheAccessTime) + (cacheMiss / total * computeMissPenalty(memoryAccessTime));
     }
 
     public float computeMissPenalty(float memoryAccessTime) {
-        
-        float missPenalty;
 
         if (isLT) {
             missPenalty = cacheAccessTime + memoryAccessTime;
@@ -118,6 +117,11 @@ public class Cache {
         {
             missPenalty = 2 * cacheAccessTime + blockSize * memoryAccessTime;
         }
+
+        //System.out.println(isLT);
+        //System.out.println(blockSize);
+        //System.out.println(cacheAccessTime);
+        //System.out.println(memoryAccessTime);
 
         return missPenalty;
     }

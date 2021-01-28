@@ -10,20 +10,27 @@ import javafx.stage.*;
 import javafx.application.*;
 import javafx.scene.control.cell.*;
 import javafx.collections.*;
+import java.io.*;
+import javafx.scene.control.Alert.*;
+import javafx.scene.control.ButtonBar.*;
+import javafx.scene.control.ButtonBar.ButtonData;
 
 public class OutputController {
     
-    private static Stage stage;
+    private Stage primaryStage;
     private Cache cache;
     private MainMemory mm;
     
-    private ArrayList<ArrayList<ArrayList<String>>> result;
     private String[] strData;
     private int[] nData;
 
     private int numOfLoops;
 
     private int index = 0;
+
+    private Alert saveAlert = new Alert(Alert.AlertType.NONE);
+    private Alert exitAlert = new Alert(Alert.AlertType.NONE);
+    private ButtonType saveFileBtn, cancelBtn, exitBtn, simulateBtn;  
 
     @FXML
     private TableView<CacheData> output;
@@ -35,12 +42,14 @@ public class OutputController {
     private Button nextBtn;
 
     @FXML 
-    private Label stepLabel, avgAccessLabel, totalAccessLabel;
+    private Label stepLabel, avgAccessLabel, totalAccessLabel, cacheHitLabel, cacheMissLabel, missPenaltyLabel;
 
-    public void initializeTable()
+    public void initializeTable(Stage stage)
     {
         String set;
-        
+
+        this.primaryStage = stage;
+
         TableColumn<CacheData, String> column1 = new TableColumn<>("Set");
         column1.setCellValueFactory(new PropertyValueFactory<>("set"));
 
@@ -68,34 +77,85 @@ public class OutputController {
     @FXML
     public void insertData(ActionEvent event)
     {
-        int tempIndex = index + 1;
-        stepLabel.setText("Step " + tempIndex + ": Inserted " + strData[index % strData.length]);
-        cache.insert(strData[index % strData.length], nData[index % strData.length]);
-        String set, block, data;
-        //clearTable();
-        
-        if(index >= strData.length * numOfLoops)
+        if (nextBtn.getText().equals("Finish"))
         {
             stepLabel.setText(" ");
             avgAccessLabel.setText("Average Access Time: " + Float.toString(cache.computeAverage(mm.getAccessTime())) + " ns");
             totalAccessLabel.setText("Total Access Time: " + Float.toString(cache.computeTotal(mm.getAccessTime())) + " ns");
+            cacheHitLabel.setText("Cache Hit: " + Integer.toString(cache.getCacheHit()));
+            cacheMissLabel.setText("Cache Miss: " + Integer.toString(cache.getCacheMiss()));
+            missPenaltyLabel.setText("Miss Penalty: " + Float.toString(cache.getMissPenalty()));
+
+            String alertContent = "Would you like to save the contents into a text file?";
+            saveFileBtn = new ButtonType("Save File", ButtonBar.ButtonData.OK_DONE);
+            //retryBtn = new ButtonType("Retry", ButtonBar.ButtonData.YES);
+            cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            saveAlert = new Alert(AlertType.CONFIRMATION, alertContent, saveFileBtn, cancelBtn);
+            saveAlert.setTitle("Finished Simulation");
+
+            String exitAlertContent = "Exit or simulate another cache?";
+            simulateBtn = new ButtonType("Simulate", ButtonBar.ButtonData.OK_DONE);
+            exitBtn = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
+            exitAlert = new Alert(AlertType.CONFIRMATION, exitAlertContent, simulateBtn, exitBtn);
+            exitAlert.setTitle("Finished Simulation");
+
+            saveAlert.showAndWait().ifPresent(saveResponse -> {
+                if (saveResponse == saveFileBtn) {
+                    saveToFile(cache.getCache());
+                }
+                
+                exitAlert.showAndWait().ifPresent(exitResponse -> {
+                    if (exitResponse == exitBtn) {
+                        System.exit(0);
+                    }
+                    else if (exitResponse == simulateBtn)
+                    {
+                        try {
+                            
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
+                            Parent root = loader.load();
+                            primaryStage.getScene().setRoot(root);
+
+                        } catch(Exception e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            });
+            
         }
         else
         {
-            clearTable();
-            if(index == strData.length * numOfLoops - 1)
-                nextBtn.setText("Finish");
-                
-            for(int i = 0; i < cache.getCache().size(); i++)
+            int tempIndex = index + 1;
+            String set, block, data;
+            
+            if(index == strData.length * numOfLoops)
             {
-                for(int j = 0; j < cache.getCache().get(i).size(); j++)
-                {
-                    set = (j == 0) ? Integer.toString(i) : "";
-                    output.getItems().add(new CacheData(set, Integer.toString(j), cache.getCache().get(i).get(j)));
-                }
+                nextBtn.setText("Finish");
+                stepLabel.setText(" ");
+                avgAccessLabel.setText("Average Access Time: " + Float.toString(cache.computeAverage(mm.getAccessTime())) + " ns");
+                totalAccessLabel.setText("Total Access Time: " + Float.toString(cache.computeTotal(mm.getAccessTime())) + " ns");
+                cacheHitLabel.setText("Cache Hit: " + Integer.toString(cache.getCacheHit()));
+                cacheMissLabel.setText("Cache Miss: " + Integer.toString(cache.getCacheMiss()));
+                missPenaltyLabel.setText("Miss Penalty: " + Float.toString(cache.getMissPenalty()));
             }
-        // to do: skip to finish button
-            index++;
+            else
+            {
+                stepLabel.setText("Step " + tempIndex + ": Inserted " + strData[index % strData.length]);
+                cache.insert(strData[index % strData.length], nData[index % strData.length]);
+                clearTable();
+                for (int i = 0; i < cache.getCache().size(); i++) {
+                    for (int j = 0; j < cache.getCache().get(i).size(); j++) {
+                        set = (j == 0) ? Integer.toString(i) : "";
+                        output.getItems().add(new CacheData(set, Integer.toString(j), cache.getCache().get(i).get(j)));
+                    }
+                }
+                // to do: skip to finish button
+                index++;
+
+            }
+            
         }
     
     }
@@ -119,6 +179,38 @@ public class OutputController {
         this.nData = tempData;
     }
 
+    public void saveToFile(ArrayList<ArrayList<String>> finalcache)
+    {
+        try {
+            FileWriter fw = new FileWriter("CacheSimulation.txt", true);
+            BufferedWriter writer = new BufferedWriter(fw);
+            writer.write("OUTPUT:\n");
+            writer.write("Cache Hit: " + Integer.toString(cache.getCacheHit()) + "\n");
+            writer.write("Cache Miss: " + Integer.toString(cache.getCacheMiss()) + "\n");
+            writer.write("Miss Penalty: " + Float.toString(cache.getMissPenalty()) + " ns\n");
+            writer.write("Average Access Time: " + Float.toString(cache.computeAverage(mm.getAccessTime())) + " ns\n");
+            writer.write("Total Access Time: " + Float.toString(cache.computeTotal(mm.getAccessTime())) + " ns\n");
+
+            writer.newLine();
+            writer.write("Final Cache:");
+            for (int i = 0; i < finalcache.size(); i++) {
+                writer.newLine();
+                writer.write("Set " + i + "\n");
+                for (int j = 0; j < finalcache.get(i).size(); j++) {
+                    writer.newLine();
+                    writer.write("\tBlock " + j + " - ");
+                    writer.write(finalcache.get(i).get(j));
+                }
+            }
+        
+            writer.close();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+    }
+    
     private void clearTable()
     {
         output.getItems().clear();

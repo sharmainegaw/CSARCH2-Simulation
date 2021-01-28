@@ -15,8 +15,11 @@
                </columnResizePolicy>
             </TableView>
             <Button fx:id="nextBtn" layoutX="828.0" layoutY="544.0" onAction="#insertData" mnemonicParsing="false" prefHeight="39.0" prefWidth="62.0" text="Next" />
-            <Label fx:id="avgAccessLabel" layoutX="390.0" layoutY="523.0" text="" />
-            <Label fx:id="totalAccessLabel" layoutX="389.0" layoutY="553.0" text="" />
+            <Label fx:id="cacheHitLabel" layoutX="390.0" layoutY="523.0" text="" />
+            <Label fx:id="cacheMissLabel" layoutX="389.0" layoutY="552.0" text="" />
+            <Label fx:id="missPenaltyLabel" layoutX="389.0" layoutY="580.0" text="" />
+            <Label fx:id="avgAccessLabel" layoutX="578.0" layoutY="554.0" text="" />
+            <Label fx:id="totalAccessLabel" layoutX="578.0" layoutY="580.0" text="" />
          </children>
       </AnchorPane>
    </children>

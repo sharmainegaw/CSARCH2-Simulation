@@ -30,7 +30,7 @@ public class Controller extends Application {
     private ComboBox cacheSizeDT, mainMemoryDT, dataType, numOfLoops;
 
     @FXML
-    private ToggleGroup loadthrough;
+    private ToggleGroup nonloadthrough;
 
 
     @Override
@@ -39,6 +39,7 @@ public class Controller extends Application {
         Parent root = loader.load();
         Controller controller = loader.getController();
 
+        this.stage = primaryStage;
         primaryStage.setTitle("Cache Simulator");
         primaryStage.setMinHeight(800);
         primaryStage.setMinWidth(1280);
@@ -75,7 +76,7 @@ public class Controller extends Application {
             outputController.setIntegerData(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
             outputController.setNumOfLoops(getNumOfLoops());
 
-            outputController.initializeTable();
+            outputController.initializeTable(stage);
 
         } catch (final Exception e) {
             e.printStackTrace();
@@ -158,7 +159,7 @@ public class Controller extends Application {
     @FXML
     public Boolean isLT()
     {
-        return ((RadioButton)loadthrough.getSelectedToggle()).isSelected();
+        return !(((RadioButton)nonloadthrough.getSelectedToggle()).isSelected());
     }
 
     @FXML
