@@ -226,8 +226,8 @@ public class Controller extends Application {
                  mainMemorySize.getText().matches("^[0-9]+$") && 
                  setSize.getText().matches("^[0-9]+$") && 
                  blockSize.getText().matches("^[0-9]+$") && 
-                 cacheAccessTime.getText().matches("(^[0-9]*[.])?[0-9]+$") &&     // regex for float
-                 mainMemoryAccessTime.getText().matches("(^[0-9]*[.])?[0-9]+$")); // regex for float
+                 cacheAccessTime.getText().matches("(^[0-9]+[.])?[0-9]+$") &&     // regex for float
+                 mainMemoryAccessTime.getText().matches("(^[0-9]+[.])?[0-9]+$")); // regex for float
     }
 
     /**
