@@ -31,4 +31,5 @@ The application is limited in solving the following problems:
 3. Data can either be Hex (Address) or Decimal (Address or Blocks).
 
 ### Sample Screenshot ###
-![sample](https://user-images.githubusercontent.com/61369402/106352533-f1184380-631e-11eb-9cc5-2ba0db2f4c7d.PNG)
+![sample](https://user-images.githubusercontent.com/61369402/106352623-98957600-631f-11eb-90cf-5fdb9e770112.PNG)
+
