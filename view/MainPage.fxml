@@ -163,7 +163,7 @@
                   </RadioButton>
                   <RadioButton mnemonicParsing="false" text="Load-Through" toggleGroup="$nonloadthrough" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                   <Label text="Data" GridPane.rowIndex="7" />
-                  <TextArea fx:id="data" prefHeight="200.0" prefWidth="200.0" promptText="Enter the data (Separate by comma)" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <TextArea fx:id="data" prefHeight="200.0" prefWidth="200.0" promptText="Enter the data (Separate by comma and a space) Ex: 204, 200, 24C" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                   <ComboBox fx:id="dataType" prefHeight="31.0" prefWidth="121.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets left="15.0" />

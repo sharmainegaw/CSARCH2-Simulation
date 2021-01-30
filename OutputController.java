@@ -14,6 +14,7 @@ import java.io.*;
 import javafx.scene.control.Alert.*;
 import javafx.scene.control.ButtonBar.*;
 import javafx.scene.control.ButtonBar.ButtonData;
+import java.text.*;
 
 public class OutputController {
     
@@ -39,7 +40,7 @@ public class OutputController {
     private TableColumn<CacheData, String> cacheset, cacheblock, cachedata;
 
     @FXML
-    private Button nextBtn;
+    private Button nextBtn, skipBtn;
 
     @FXML 
     private Label stepLabel, avgAccessLabel, totalAccessLabel, cacheHitLabel, cacheMissLabel, missPenaltyLabel;
@@ -79,85 +80,142 @@ public class OutputController {
     {
         if (nextBtn.getText().equals("Finish"))
         {
-            stepLabel.setText(" ");
-            avgAccessLabel.setText("Average Access Time: " + Float.toString(cache.computeAverage(mm.getAccessTime())) + " ns");
-            totalAccessLabel.setText("Total Access Time: " + Float.toString(cache.computeTotal(mm.getAccessTime())) + " ns");
-            cacheHitLabel.setText("Cache Hit: " + Integer.toString(cache.getCacheHit()));
-            cacheMissLabel.setText("Cache Miss: " + Integer.toString(cache.getCacheMiss()));
-            missPenaltyLabel.setText("Miss Penalty: " + Float.toString(cache.getMissPenalty()));
-
-            String alertContent = "Would you like to save the contents into a text file?";
-            saveFileBtn = new ButtonType("Save File", ButtonBar.ButtonData.OK_DONE);
-            //retryBtn = new ButtonType("Retry", ButtonBar.ButtonData.YES);
-            cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            saveAlert = new Alert(AlertType.CONFIRMATION, alertContent, saveFileBtn, cancelBtn);
-            saveAlert.setTitle("Finished Simulation");
-
-            String exitAlertContent = "Exit or simulate another cache?";
-            simulateBtn = new ButtonType("Simulate", ButtonBar.ButtonData.OK_DONE);
-            exitBtn = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
-            exitAlert = new Alert(AlertType.CONFIRMATION, exitAlertContent, simulateBtn, exitBtn);
-            exitAlert.setTitle("Finished Simulation");
-
-            saveAlert.showAndWait().ifPresent(saveResponse -> {
-                if (saveResponse == saveFileBtn) {
-                    saveToFile(cache.getCache());
-                }
-                
-                exitAlert.showAndWait().ifPresent(exitResponse -> {
-                    if (exitResponse == exitBtn) {
-                        System.exit(0);
-                    }
-                    else if (exitResponse == simulateBtn)
-                    {
-                        try {
-                            
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
-                            Parent root = loader.load();
-                            primaryStage.getScene().setRoot(root);
-
-                        } catch(Exception e){
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-            });
-            
+            triggerFinish();
         }
         else
         {
             int tempIndex = index + 1;
-            String set, block, data;
             
             if(index == strData.length * numOfLoops)
             {
                 nextBtn.setText("Finish");
-                stepLabel.setText(" ");
-                avgAccessLabel.setText("Average Access Time: " + Float.toString(cache.computeAverage(mm.getAccessTime())) + " ns");
-                totalAccessLabel.setText("Total Access Time: " + Float.toString(cache.computeTotal(mm.getAccessTime())) + " ns");
-                cacheHitLabel.setText("Cache Hit: " + Integer.toString(cache.getCacheHit()));
-                cacheMissLabel.setText("Cache Miss: " + Integer.toString(cache.getCacheMiss()));
-                missPenaltyLabel.setText("Miss Penalty: " + Float.toString(cache.getMissPenalty()));
+                skipBtn.setVisible(false);
+                nextBtn.setLayoutX(828);
+                nextBtn.setLayoutY(561); 
+                showComputations();
             }
             else
             {
                 stepLabel.setText("Step " + tempIndex + ": Inserted " + strData[index % strData.length]);
                 cache.insert(strData[index % strData.length], nData[index % strData.length]);
                 clearTable();
-                for (int i = 0; i < cache.getCache().size(); i++) {
-                    for (int j = 0; j < cache.getCache().get(i).size(); j++) {
-                        set = (j == 0) ? Integer.toString(i) : "";
-                        output.getItems().add(new CacheData(set, Integer.toString(j), cache.getCache().get(i).get(j)));
-                    }
-                }
-                // to do: skip to finish button
+                prepareTable();
+                
                 index++;
+            }
+        }
+    }
 
+    @FXML
+    public void skipSimulation(ActionEvent event)
+    {
+
+        while(index <= strData.length * numOfLoops)
+        {
+            int tempIndex = index + 1;
+            
+            if(index == strData.length * numOfLoops)
+            {
+                prepareTable();
+                
+                nextBtn.setText("Finish");
+                skipBtn.setVisible(false);
+                nextBtn.setLayoutX(828);
+                nextBtn.setLayoutY(561); 
+                showComputations();
+            }
+            else
+            {
+                cache.insert(strData[index % strData.length], nData[index % strData.length]);
+                clearTable();
             }
             
+            index++;
         }
-    
+
+        //@Override
+        nextBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                triggerFinish();
+            }
+        });
+    }
+
+    private void prepareTable()
+    {
+        String set, block, data;
+
+        for (int i = 0; i < cache.getCache().size(); i++) {
+            for (int j = 0; j < cache.getCache().get(i).size(); j++) {
+                set = (j == 0) ? Integer.toString(i) : "";
+                output.getItems().add(new CacheData(set, Integer.toString(j), cache.getCache().get(i).get(j)));
+            }
+        }
+    }
+
+    public void triggerFinish() {
+        showComputations();
+        String alertContent = "Would you like to save the contents into a text file?";
+        saveFileBtn = new ButtonType("Save File", ButtonBar.ButtonData.OK_DONE);
+        cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        saveAlert = new Alert(AlertType.CONFIRMATION, alertContent, saveFileBtn, cancelBtn);
+        saveAlert.setTitle("Finished Simulation");
+
+        String exitAlertContent = "Exit or simulate another cache?";
+        simulateBtn = new ButtonType("Simulate", ButtonBar.ButtonData.OK_DONE);
+        exitBtn = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
+        exitAlert = new Alert(AlertType.CONFIRMATION, exitAlertContent, simulateBtn, exitBtn);
+        exitAlert.setTitle("Finished Simulation");
+
+        saveAlert.showAndWait().ifPresent(saveResponse -> {
+            if (saveResponse == saveFileBtn) {
+                saveToFile(cache.getCache());
+            }
+            
+            exitAlert.showAndWait().ifPresent(exitResponse -> {
+                if (exitResponse == exitBtn) {
+                    System.exit(0);
+                }
+                else if (exitResponse == simulateBtn)
+                {
+                    try {
+                        
+                        //@Override
+                        nextBtn.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override 
+                            public void handle(ActionEvent e) {
+                                insertData(e);
+                            }
+                        });
+
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
+                        Parent root = loader.load();
+                        primaryStage.getScene().setRoot(root);
+
+                    } catch(Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        });
+    }
+
+    @FXML
+    public void showComputations()
+    {
+        DecimalFormat decimal = new DecimalFormat("##.00");
+        
+        String averageAccessTime = decimal.format(cache.computeAverage(mm.getAccessTime()));
+        String totalAccessTime = decimal.format(cache.computeTotal(mm.getAccessTime()));
+        
+        stepLabel.setText(" ");
+        avgAccessLabel.setText("Average Access Time: " + averageAccessTime + " ns");
+        totalAccessLabel.setText("Total Access Time: " + totalAccessTime + " ns");
+        cacheHitLabel.setText("Cache Hit: " + Integer.toString(cache.getCacheHit()));
+        cacheMissLabel.setText("Cache Miss: " + Integer.toString(cache.getCacheMiss()));
+        missPenaltyLabel.setText("Miss Penalty: " + Float.toString(cache.getMissPenalty()));
     }
 
     public void setIntegerData(String[] data, int nLoop, boolean dataIsInBlocks, boolean dataIsInHexAddress)
