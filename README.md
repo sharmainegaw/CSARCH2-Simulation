@@ -30,4 +30,5 @@ The application is limited in solving the following problems:
 2. All of the input fields must be filled out by the user. No random generator in this program.
 3. Data can either be Hex (Address) or Decimal (Address or Blocks).
 
-### Sample Screenshots ###
+### Sample Screenshot ###
+![sample](https://user-images.githubusercontent.com/61369402/106352533-f1184380-631e-11eb-9cc5-2ba0db2f4c7d.PNG)
