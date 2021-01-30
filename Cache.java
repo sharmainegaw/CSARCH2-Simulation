@@ -102,6 +102,7 @@ public class Cache {
     }
 
     public float computeAverage(float memoryAccessTime) {
+   
         float total = (float) (cacheHit + cacheMiss);
         //System.out.println("Cache Hit " + Integer.toString(cacheHit));
         //System.out.println("Cache Miss " + Integer.toString(cacheMiss));

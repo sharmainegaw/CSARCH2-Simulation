@@ -14,7 +14,9 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button fx:id="nextBtn" layoutX="828.0" layoutY="544.0" onAction="#insertData" mnemonicParsing="false" prefHeight="39.0" prefWidth="62.0" text="Next" />
+            <Button fx:id="nextBtn" layoutX="828.0" layoutY="514.0" onAction="#insertData" mnemonicParsing="false" prefHeight="39.0" prefWidth="62.0" text="Next" />
+            <Button fx:id="skipBtn" layoutX="761.0" layoutY="561.0" onAction="#skipSimulation" mnemonicParsing="false" prefHeight="39.0" prefWidth="129.0" text="Skip Simulation" />
+            
             <Label fx:id="cacheHitLabel" layoutX="390.0" layoutY="523.0" text="" />
             <Label fx:id="cacheMissLabel" layoutX="389.0" layoutY="552.0" text="" />
             <Label fx:id="missPenaltyLabel" layoutX="389.0" layoutY="580.0" text="" />

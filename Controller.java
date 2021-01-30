@@ -4,18 +4,21 @@ import java.util.*;
 import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.*;
-import javafx.scene.control.*;
 import javafx.stage.Stage.*;
 import javafx.stage.*;
 import javafx.application.*;
 import javafx.scene.control.cell.*;
 import javafx.collections.*;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.*;
 
 public class Controller extends Application {
     
     private static Stage stage;
     private Cache cache;
     private MainMemory mm;
+
+    private Alert a;
 
     @FXML
     private Button startbtn;
@@ -31,7 +34,6 @@ public class Controller extends Application {
 
     @FXML
     private ToggleGroup nonloadthrough;
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -59,27 +61,78 @@ public class Controller extends Application {
     @FXML
     public void startSimulation(ActionEvent event)
     {
-        
-        try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OutputPage.fxml"));
-            final Parent root = loader.load();
-            
-            startbtn.getScene().setRoot(root);
+        if(isBlank())
+        {
+            a = new Alert(AlertType.ERROR, "Fields cannot be empty.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if (isInvalidType())
+        {
+            a = new Alert(AlertType.ERROR, "Fields can only contain numeric values.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if (isZero())
+        {
+            a = new Alert(AlertType.ERROR, "Fields cannot be 0.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if (!isDivisibleByBlockSize(getCacheSize(), isCacheInWords()) || 
+                 !isDivisibleByBlockSize(getMainMemorySize(), isMMInWords()))
+        {
+            a = new Alert(AlertType.ERROR, "Cache/Main Memory is not divisible by block size.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if(!isCacheDivisibleBySet(getCacheSize(), isCacheInWords(), getSetSize()))
+        {
+            a = new Alert(AlertType.ERROR, "Cache is not divisible by set size.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if(!isPowerOfTwo(getCacheSize()) || !isPowerOfTwo(getMainMemorySize()))
+        {
+            a = new Alert(AlertType.ERROR, "Invalid Cache/Main Memory Size; must be powers of two.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if(isInvalidDataFormat())
+        {       
+            a = new Alert(AlertType.ERROR, "Data is in wrong format.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else if(!isValidSize(getCacheSize(), getMainMemorySize()))
+        {
+            a = new Alert(AlertType.ERROR, "Cache size should be smaller than Main Memory size.");
+            a.setTitle("Error");
+            a.show();
+        }
+        else
+        {
+            try {
+                final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OutputPage.fxml"));
+                final Parent root = loader.load();
+                
+                startbtn.getScene().setRoot(root);
 
-            OutputController outputController = (OutputController) loader.getController();
+                OutputController outputController = (OutputController) loader.getController();
 
-            cache();
+                cache();
 
-            outputController.setCache(cache);
-            outputController.setMainMemory(mm);
-            outputController.setStringData(getData());
-            outputController.setIntegerData(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
-            outputController.setNumOfLoops(getNumOfLoops());
+                outputController.setCache(cache);
+                outputController.setMainMemory(mm);
+                outputController.setStringData(getData());
+                outputController.setIntegerData(getData(), getNumOfLoops(), isDataInBlocks(), isDataInHex());
+                outputController.setNumOfLoops(getNumOfLoops());
 
-            outputController.initializeTable(stage);
+                outputController.initializeTable(stage);
 
-        } catch (final Exception e) {
-            e.printStackTrace();
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -88,7 +141,7 @@ public class Controller extends Application {
         //String[] data = {"200","204","208","20C","2F4","2F0","200","204","218","21C","24C","2F4"}; try mo to HAHAHHA
         //String[] dataInBlocks = {"21", "27", "25", "20", "29", "27", "21", "25", "30", "30"};
         //int nLoop = 2;
-        // 200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4
+        // 200, 200, 204, 208, 20C, 2F4, 2F0, 200, 204, 218, 21C, 24C, 2F4
 
         //int cacheSize = 4;
         //int blockSize = 8;
@@ -106,27 +159,85 @@ public class Controller extends Application {
         }
     }
 
-    private void testPrintValues()
+    private boolean isBlank()
     {
-        System.out.println("cache size: " + getCacheSize());
-        System.out.println("main memory size: " + getCacheSize());
-
-        System.out.println("set size: " + getSetSize());
-        System.out.println("block size: " + getBlockSize());
-        System.out.println("cache access time: " + getCacheAccessTime());
-        System.out.println("main memory access time: " + getMainMemoryAccessTime());
-
-        String[] data = getData();
-        System.out.println("data: ");
-        for(int i = 0; i < data.length; i++)
-            System.out.print(data[i] + " ");
-
-        System.out.println("\nnum of loops: " + getNumOfLoops());
+        return ( cacheSize.getText().trim().equals("") || 
+                 mainMemorySize.getText().trim().equals("") || 
+                 setSize.getText().trim().equals("") || 
+                 blockSize.getText().trim().equals("") || 
+                 cacheAccessTime.getText().trim().equals("") || 
+                 mainMemoryAccessTime.getText().trim().equals("") ||
+                 data.getText().trim().equals(""));
     }
 
-    private static Boolean isValidSize(int cacheSize, int mainMemorySize)
+    private boolean isInvalidType()
     {
-        return cacheSize < mainMemorySize;
+        return !(cacheSize.getText().matches("^[0-9]*$") &&                     // regex for int
+                 mainMemorySize.getText().matches("^[0-9]+$") && 
+                 setSize.getText().matches("^[0-9]+$") && 
+                 blockSize.getText().matches("^[0-9]+$") && 
+                 cacheAccessTime.getText().matches("(^[0-9]*[.])?[0-9]+$") &&     // regex for float
+                 mainMemoryAccessTime.getText().matches("(^[0-9]*[.])?[0-9]+$")); // regex for float
+    }
+
+    private boolean isInvalidDataFormat()
+    {
+        if(isDataInHex())
+        {
+            return !(data.getText().matches("^([0-9A-F]+[,][\\s])*[0-9A-F]+$"));
+        }
+        else
+        {
+            return !(data.getText().matches("^([0-9]+[,][\\s])*[0-9]+$"));
+        }
+    }
+
+    private boolean isPowerOfTwo(int number)
+    {
+        return (number != 0) && ((number & (number - 1)) == 0);
+    }
+
+    private boolean isDivisibleByBlockSize(int number, boolean isInWords)
+    {
+        if(isInWords)
+            return number % getBlockSize() == 0;
+
+        return true;
+        
+    }
+
+    private boolean isCacheDivisibleBySet(int number, boolean isInWords, int setSize)
+    {
+        if(isInWords)
+            number = number % getBlockSize();
+        
+        return number % setSize == 0;
+    }
+    
+    private boolean isZero()
+    {
+        return ( getSetSize() == 0|| 
+                 getBlockSize() == 0 || 
+                 getCacheAccessTime() == 0 || 
+                 getMainMemoryAccessTime() == 0);
+    }
+
+    private Boolean isValidSize(int cacheSize, int mainMemorySize)
+    {
+        int tempCache = cacheSize;
+        int tempMM = mainMemorySize; 
+
+        if(isMMInWords())
+        {
+           tempMM = mainMemorySize / getBlockSize();    
+        }
+        
+        if(isCacheInWords())
+        {
+           tempCache = cacheSize / getBlockSize();
+        }
+
+        return tempCache < tempMM; 
     }
 
     @FXML
@@ -172,5 +283,17 @@ public class Controller extends Application {
     public Boolean isDataInHex() 
     {
         return dataType.getValue().toString().equals("Address (Hex)"); 
+    }
+
+    @FXML
+    public Boolean isCacheInWords() 
+    {
+        return cacheSizeDT.getValue().toString().equals("Words"); 
+    }
+
+    @FXML
+    public Boolean isMMInWords() 
+    {
+        return mainMemoryDT.getValue().toString().equals("Words"); 
     }
 }
