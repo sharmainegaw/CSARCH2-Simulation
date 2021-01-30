@@ -7,12 +7,16 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../view/css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="813.0" prefWidth="815.0" stylesheets="@../view/css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
   <children>
-      <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="160.0" prefWidth="1280.0" />
+      <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="160.0" prefWidth="1280.0">
+         <children>
+            <Label id="header" layoutX="152.0" layoutY="49.0" styleClass="root" stylesheets="@css/style.css" text="Cache Simulator (BSA-LRU)" textAlignment="CENTER" />
+         </children>
+      </Pane>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-            <GridPane layoutX="378.0" layoutY="28.0" prefHeight="561.0" prefWidth="917.0">
+            <GridPane layoutX="136.0" layoutY="32.0" prefHeight="561.0" prefWidth="917.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
@@ -32,7 +36,7 @@
               </rowConstraints>
                <children>
                   <Label text="Cache Size" />
-                  <TextField fx:id="cacheSize" promptText="Enter a number" GridPane.columnIndex="1" />
+                  <TextField fx:id="cacheSize" promptText="Enter a number" styleClass="root" stylesheets="@css/style.css" GridPane.columnIndex="1" />
                   <ComboBox fx:id="cacheSizeDT" prefHeight="31.0" prefWidth="121.0" GridPane.columnIndex="2">
                                              <items>
                            <FXCollections fx:factory="observableArrayList">
@@ -48,7 +52,7 @@
                      </GridPane.margin>
                   </ComboBox>
                   <Label text="Main Memory Size" GridPane.rowIndex="1" />
-                  <TextField fx:id="mainMemorySize" promptText="Enter a number" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="mainMemorySize" promptText="Enter a number" styleClass="root" stylesheets="@css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <ComboBox fx:id="mainMemoryDT" prefHeight="31.0" prefWidth="121.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="15.0" />
@@ -83,7 +87,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="setSize" GridPane.rowIndex="1" />
+                        <TextField fx:id="setSize" promptText="Enter a number" styleClass="root" stylesheets="@css/style.css" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Label text="Block Size" GridPane.rowIndex="3" />
@@ -106,7 +110,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="blockSize" GridPane.rowIndex="1" />
+                        <TextField fx:id="blockSize" promptText="Enter a number" styleClass="root" stylesheets="@css/style.css" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Label text="Cache Access Time" GridPane.rowIndex="4" />
@@ -129,7 +133,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="cacheAccessTime" GridPane.rowIndex="1" />
+                        <TextField fx:id="cacheAccessTime" promptText="Enter a number" styleClass="root" stylesheets="@css/style.css" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Label text="Main Memory Access Time" GridPane.rowIndex="5" />
@@ -152,7 +156,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="mainMemoryAccessTime" GridPane.rowIndex="1" />
+                        <TextField fx:id="mainMemoryAccessTime" promptText="Enter a number" styleClass="root" stylesheets="@css/style.css" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Label text="Read Mode/Type" GridPane.rowIndex="6" />
@@ -163,7 +167,7 @@
                   </RadioButton>
                   <RadioButton mnemonicParsing="false" text="Load-Through" toggleGroup="$nonloadthrough" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                   <Label text="Data" GridPane.rowIndex="7" />
-                  <TextArea fx:id="data" prefHeight="200.0" prefWidth="200.0" promptText="Enter the data (Separate by comma and a space) Ex: 204, 200, 24C" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <TextArea id="datafield" fx:id="data" prefHeight="200.0" prefWidth="200.0" promptText="e.g. 204, 200, 24C" styleClass="root" stylesheets="@css/style.css" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                   <ComboBox fx:id="dataType" prefHeight="31.0" prefWidth="121.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets left="15.0" />
@@ -199,7 +203,7 @@
                         <String fx:value="1" />
                      </value>
                   </ComboBox>
-                  <Button fx:id="startbtn" mnemonicParsing="false" text="Start Simulation" onAction="#startSimulation" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                  <Button id="startbtn" fx:id="startbtn" mnemonicParsing="false" text="Start Simulation" onAction="#startSimulation" GridPane.columnIndex="2" GridPane.rowIndex="9">
                      <GridPane.margin>
                         <Insets left="15.0" />
                      </GridPane.margin>
