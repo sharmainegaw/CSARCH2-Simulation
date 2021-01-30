@@ -1,11 +1,45 @@
 .root {
-    -fx-font-family: 'Helvetica', Arial, sans-serif;
-    -fx-font-size: 14;
-    -fx-background-color: #ffffff;
+    -fx-base: rgb(50, 50, 50);
+    -fx-background: rgb(50, 50, 50);
+
+    /* make controls (buttons, thumb, etc.) slightly lighter */
+    -fx-color: derive(-fx-base, 10%);
+
+    /* text fields and table rows background */
+    -fx-control-inner-background: rgb(20, 20, 20);
+    /* version of -fx-control-inner-background for alternative rows */
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, 2.5%);
+
+    /* text colors depending on background's brightness */
+    -fx-light-text-color: rgb(220, 220, 220);
+    -fx-mid-text-color: rgb(100, 100, 100);
+    -fx-dark-text-color: rgb(20, 20, 20);
+    -fx-prompt-text-fill: gray;
+
+    /* A bright blue for highlighting/accenting objects.  For example: selected
+     * text; selected items in menus, lists, trees, and tables; progress bars */
+    -fx-accent: rgb(0, 80, 100);
+
+    /* color of non-focused yet selected elements */
+    -fx-selection-bar-non-focused: rgb(50, 50, 50);
+
+    -fx-font-family: 'Helvetica', sans-serif;
+    
+}
+.startbtn{
+    -fx-background-color: rgb(175, 172, 172);
+    -fx-text-fill: black;
+    -fx-font-family: 'Helvetica', sans-serif;
 }
 
-.startbtn{
-    -fx-background-color: #2c3553;
+.startbtn:hover {
+    -fx-background-color:rgb(220, 220, 220);
+    -fx-scale-y: 1.1;
+}
+
+#header {
+    -fx-font-size: 32pt;
+    -fx-font-family: "Helvetica";
     -fx-text-fill: white;
-    -fx-font-family: 'Helvetica', Arial, sans-serif;
+    -fx-opacity: 1;
 }

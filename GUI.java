@@ -20,6 +20,7 @@ public class GUI extends Application {
     @FXML
     private ComboBox cacheSizeDT, mainMemoryDT, dataType, numOfLoops;
 
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
@@ -42,29 +43,56 @@ public class GUI extends Application {
         launch();
     }
 
-
+    /*
+    * Getter method to fetch data from cache size input field 
+    * @return Parsed integer value of cache size
+    */
     public int getCacheSize(){ return Integer.parseInt(cacheSize.getText()); }
 
-    //public String getCacheSizeDT { return cacheSizeDT.getValue(); }
-
+    /*
+    * Getter method to fetch data from main memory size input field 
+    * @return Parsed integer value of main memory size
+    */
     public int getMainMemorySize(){ return Integer.parseInt(mainMemorySize.getText()); }
 
-    //public String getMainMemoryDT { return mainMemoryDT.getValue(); }
-
+    /*
+    * Getter method to fetch data from set size input field 
+    * @return Parsed integer value of set size
+    */
     public int getSetSize(){ return Integer.parseInt(setSize.getText()); }
 
+    /*
+    * Getter method to fetch data from block size input field 
+    * @return Parsed integer value of block size
+    */
     public int getBlockSize() { return Integer.parseInt(blockSize.getText()); }
 
+    /*
+    * Getter method to fetch data from cache access time input field 
+    * @return Parsed integer value of cache access time
+    */
     public int getCacheAccessTime() { return Integer.parseInt(cacheAccessTime.getText()); }
 
+    /*
+    * Getter method to fetch data from main memory access time input field 
+    * @return Parsed integer value of main memory access time
+    */
     public int getMainMemoryAccessTime() { return Integer.parseInt(mainMemoryAccessTime.getText()); }
 
+    /*
+    * Getter method to fetch data from data text area
+    * @return Array of String containing the data to be inserted in the cache
+    */
     public String[] getData()
     {
         System.out.println(data.getText().split(", "));
         return data.getText().split(", ");
     }
 
+    /*
+    * Getter method to fetch the type of data (block/address(hex) for the data
+    * @return String that indicates if it's "Block" or "Address(Hex)"
+    */
     public String getDataType() 
     {
         System.out.println(dataType.getValue().toString());

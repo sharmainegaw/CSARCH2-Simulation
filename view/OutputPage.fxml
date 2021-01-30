@@ -3,25 +3,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@../view/css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OutputController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="813.0" prefWidth="815.0" stylesheets="@../view/css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OutputController">
    <children>
-      <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="160.0" prefWidth="1280.0" />
+      <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="160.0" prefWidth="1280.0">
+         <children>
+            <Label id="header" layoutX="152.0" layoutY="49.0" styleClass="root" stylesheets="@css/style.css" text="Cache Simulator (BSA-LRU)" textAlignment="CENTER" />
+         </children>
+      </Pane>
       <AnchorPane prefHeight="597.0" prefWidth="1280.0">
          <children>
             <Label fx:id="stepLabel" layoutX="390.0" layoutY="14.0" text="" />
-            <TableView fx:id="output" layoutX="390.0" layoutY="46.0" maxWidth="500.0" minWidth="500.0" prefHeight="462.0" prefWidth="500.0">
+            <TableView fx:id="output" layoutX="165.0" layoutY="14.0" maxWidth="500.0" minWidth="500.0" prefHeight="462.0" prefWidth="500.0">
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button fx:id="nextBtn" layoutX="828.0" layoutY="514.0" onAction="#insertData" mnemonicParsing="false" prefHeight="39.0" prefWidth="62.0" text="Next" />
-            <Button fx:id="skipBtn" layoutX="761.0" layoutY="561.0" onAction="#skipSimulation" mnemonicParsing="false" prefHeight="39.0" prefWidth="129.0" text="Skip Simulation" />
+            <Button fx:id="nextBtn" layoutX="604.0" layoutY="488.0" onAction="#insertData" mnemonicParsing="false" prefHeight="39.0" prefWidth="62.0" text="Next" />
+            <Button fx:id="skipBtn" layoutX="537.0" layoutY="535.0" onAction="#skipSimulation" mnemonicParsing="false" prefHeight="39.0" prefWidth="129.0" text="Skip Simulation" />
             
-            <Label fx:id="cacheHitLabel" layoutX="390.0" layoutY="523.0" text="" />
-            <Label fx:id="cacheMissLabel" layoutX="389.0" layoutY="552.0" text="" />
-            <Label fx:id="missPenaltyLabel" layoutX="389.0" layoutY="580.0" text="" />
-            <Label fx:id="avgAccessLabel" layoutX="578.0" layoutY="554.0" text="" />
-            <Label fx:id="totalAccessLabel" layoutX="578.0" layoutY="580.0" text="" />
+            <Label fx:id="cacheHitLabel" layoutX="166.0" layoutY="497.0" text="" />
+            <Label fx:id="cacheMissLabel" layoutX="165.0" layoutY="526.0" text="" />
+            <Label fx:id="missPenaltyLabel" layoutX="165.0" layoutY="554.0" text="" />
+            <Label fx:id="avgAccessLabel" layoutX="354.0" layoutY="528.0"  text="" />
+            <Label fx:id="totalAccessLabel" layoutX="354.0" layoutY="554.0" text="" />
          </children>
       </AnchorPane>
    </children>
