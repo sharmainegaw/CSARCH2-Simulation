@@ -18,20 +18,21 @@ import java.text.*;
 import java.util.Date;
 
 /**
-* The OutputController class is the controller for the OutputPage. It handles the operation of
-* inserting data into the cache, displaying the output in the GUI, and saving the output into a text file.
-*
-* @author  Robi Banogon
-* @author  Christine Deticio
-* @author  Sharmaine Gaw
-* @author  Kirsten Sison
-*/
+ * The OutputController class is the controller for the OutputPage. It handles
+ * the operation of inserting data into the cache, displaying the output in the
+ * GUI, and saving the output into a text file.
+ *
+ * @author Robi Banogon
+ * @author Christine Deticio
+ * @author Sharmaine Gaw
+ * @author Kirsten Sison
+ */
 public class OutputController {
-    
+
     private Stage primaryStage;
     private Cache cache;
     private MainMemory mm;
-    
+
     private String[] strData;
     private int[] nData;
 
@@ -41,7 +42,7 @@ public class OutputController {
 
     private Alert saveAlert = new Alert(Alert.AlertType.NONE);
     private Alert exitAlert = new Alert(Alert.AlertType.NONE);
-    private ButtonType saveFileBtn, cancelBtn, exitBtn, simulateBtn;  
+    private ButtonType saveFileBtn, cancelBtn, exitBtn, simulateBtn;
 
     @FXML
     private TableView<CacheData> output;
@@ -52,18 +53,16 @@ public class OutputController {
     @FXML
     private Button nextBtn, skipBtn;
 
-    @FXML 
+    @FXML
     private Label stepLabel, avgAccessLabel, totalAccessLabel, cacheHitLabel, cacheMissLabel, missPenaltyLabel;
 
-
     /**
-    * Initializes the table for the cache simulation output.
-    *
-    * @param stage     the primary stage used by Controller.java 
-    *                  to be used later when simulation is restarted.
-    */
-    public void initializeTable(Stage stage)
-    {
+     * Initializes the table for the cache simulation output.
+     *
+     * @param stage the primary stage used by Controller.java to be used later when
+     *              simulation is restarted.
+     */
+    public void initializeTable(Stage stage) {
         String set;
 
         this.primaryStage = stage;
@@ -81,85 +80,72 @@ public class OutputController {
         output.getColumns().add(column2);
         output.getColumns().add(column3);
 
-        for(int i = 0; i < cache.getCache().size(); i++)
-        {
-            for(int j = 0; j < cache.getCache().get(i).size(); j++)
-            {
+        for (int i = 0; i < cache.getCache().size(); i++) {
+            for (int j = 0; j < cache.getCache().get(i).size(); j++) {
                 set = (j == 0) ? Integer.toString(i) : "";
                 output.getItems().add(new CacheData(set, Integer.toString(j), ""));
             }
         }
 
     }
+
     /**
-    * Inserts the input to Cache to start simulation
-    * and displays each step and inserted data.
-    */
+     * Inserts the input to Cache to start simulation and displays each step and
+     * inserted data.
+     */
     @FXML
-    public void insertData()
-    {
-        if (nextBtn.getText().equals("Finish"))
-        {
+    public void insertData() {
+        if (nextBtn.getText().equals("Finish")) {
             triggerFinish();
-        }
-        else
-        {
+        } else {
             int tempIndex = index + 1;
-            
-            if(index == strData.length * numOfLoops)
-            {
+
+            if (index == strData.length * numOfLoops) {
                 nextBtn.setText("Finish");
                 skipBtn.setVisible(false);
                 nextBtn.setLayoutX(604);
-                nextBtn.setLayoutY(535); 
+                nextBtn.setLayoutY(545);
                 showComputations();
-            }
-            else
-            {
-                if(index == strData.length * numOfLoops -1)
+            } else {
+                if (index == strData.length * numOfLoops - 1)
                     skipBtn.setVisible(false);
-                    
+
                 stepLabel.setText("Step " + tempIndex + ": Inserted " + strData[index % strData.length]);
                 cache.insert(strData[index % strData.length], nData[index % strData.length]);
                 clearTable();
                 prepareTable();
-                
+
                 index++;
             }
         }
     }
 
     /**
-    * Inserts the input to Cache to start simulation                 
-    */
+     * Inserts the input to Cache to start simulation
+     */
     @FXML
-    public void skipSimulation()
-    {
+    public void skipSimulation() {
 
-        while(index <= strData.length * numOfLoops)
-        {
+        while (index <= strData.length * numOfLoops) {
             int tempIndex = index + 1;
-            
-            if(index == strData.length * numOfLoops)
-            {
+
+            if (index == strData.length * numOfLoops) {
                 prepareTable();
-                
+
                 nextBtn.setText("Finish");
                 skipBtn.setVisible(false);
                 nextBtn.setLayoutX(604);
-                nextBtn.setLayoutY(535); 
+                nextBtn.setLayoutY(545);
                 showComputations();
-            }
-            else
-            {
+            } else {
                 cache.insert(strData[index % strData.length], nData[index % strData.length]);
                 clearTable();
             }
-            
+
             index++;
         }
 
-        //@Override
+        // @Override
         nextBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -169,10 +155,9 @@ public class OutputController {
     }
 
     /**
-    * This method inserts the cache into the table that will be displayed.   
-    */
-    private void prepareTable()
-    {
+     * This method inserts the cache into the table that will be displayed.
+     */
+    private void prepareTable() {
         String set, block, data;
 
         for (int i = 0; i < cache.getCache().size(); i++) {
@@ -184,9 +169,9 @@ public class OutputController {
     }
 
     /**
-    * This method triggers the alerts for saving the output into a file and simulating or exiting the
-    * application after the cache simulation is finished.
-    */
+     * This method triggers the alerts for saving the output into a file and
+     * simulating or exiting the application after the cache simulation is finished.
+     */
     public void triggerFinish() {
         showComputations();
         String alertContent = "Would you like to save the contents into a text file?";
@@ -205,18 +190,16 @@ public class OutputController {
             if (saveResponse == saveFileBtn) {
                 saveToFile(cache.getCache());
             }
-            
+
             exitAlert.showAndWait().ifPresent(exitResponse -> {
                 if (exitResponse == exitBtn) {
                     System.exit(0);
-                }
-                else if (exitResponse == simulateBtn)
-                {
+                } else if (exitResponse == simulateBtn) {
                     try {
-                        
-                        //@Override
+
+                        // @Override
                         nextBtn.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override 
+                            @Override
                             public void handle(ActionEvent e) {
                                 insertData();
                             }
@@ -226,7 +209,7 @@ public class OutputController {
                         Parent root = loader.load();
                         primaryStage.getScene().setRoot(root);
 
-                    } catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -236,13 +219,12 @@ public class OutputController {
     }
 
     /**
-    * Accesses the cache-related computations and displays it in the GUI.
-    */
+     * Accesses the cache-related computations and displays it in the GUI.
+     */
     @FXML
-    public void showComputations()
-    {
+    public void showComputations() {
         DecimalFormat decimal = new DecimalFormat("##.00");
-        
+
         String averageAccessTime = decimal.format(cache.computeAverage(mm.getAccessTime()));
         String totalAccessTime = decimal.format(cache.computeTotal(mm.getAccessTime()));
         String missPenaltyFormatted = decimal.format(cache.getMissPenalty());
@@ -255,14 +237,15 @@ public class OutputController {
     }
 
     /**
-    * Converts the data in String into blocks and stores it into an integer array. 
-    *
-    * @param data               the data in a String array.
-    * @param dataIsInBlocks     boolean variable that states whether or not data is in blocks.
-    * @param dataIsInHexAddress boolean variable that states whether or not data is in hex address.
-    */
-    public void setIntegerData(String[] data, boolean dataIsInBlocks, boolean dataIsInHexAddress)
-    {
+     * Converts the data in String into blocks and stores it into an integer array.
+     *
+     * @param data               the data in a String array.
+     * @param dataIsInBlocks     boolean variable that states whether or not data is
+     *                           in blocks.
+     * @param dataIsInHexAddress boolean variable that states whether or not data is
+     *                           in hex address.
+     */
+    public void setIntegerData(String[] data, boolean dataIsInBlocks, boolean dataIsInHexAddress) {
         int[] tempData = new int[data.length];
 
         if (!dataIsInBlocks) {
@@ -280,24 +263,25 @@ public class OutputController {
         this.nData = tempData;
     }
 
-/*
-    * Saves the cache snapshot and computations (cache hit, cache miss, miss penalty, average access time, total access time)
-    * in a text file, entitled the current date and time in the format yy-MM-dd_hh-mm-ss - CacheSimulation.
-    *
-    * @param finalcache  the snapshot of the cache to be saved as ArrayList<ArrayList<String>>.
-    */
-    public void saveToFile(ArrayList<ArrayList<String>> finalcache)
-    {
-        //get date
+    /*
+     * Saves the cache snapshot and computations (cache hit, cache miss, miss
+     * penalty, average access time, total access time) in a text file, entitled the
+     * current date and time in the format yy-MM-dd_hh-mm-ss - CacheSimulation.
+     *
+     * @param finalcache the snapshot of the cache to be saved as
+     * ArrayList<ArrayList<String>>.
+     */
+    public void saveToFile(ArrayList<ArrayList<String>> finalcache) {
+        // get date
         Date date = new Date();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yy-MM-dd_hh-mm-ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_hh-mm-ss");
         String filename = dateFormat.format(date) + " - CacheSimulation.txt";
-        
+
         DecimalFormat decimal = new DecimalFormat("##.00");
         String averageAccessTime = decimal.format(cache.computeAverage(mm.getAccessTime()));
         String totalAccessTime = decimal.format(cache.computeTotal(mm.getAccessTime()));
         String missPenaltyFormatted = decimal.format(cache.getMissPenalty());
-        
+
         try {
 
             String path = System.getProperty("user.dir");
@@ -306,7 +290,7 @@ public class OutputController {
             File file = new File(otherFolder + "/" + filename);
 
             file.getParentFile().mkdirs();
-            if(!file.exists())
+            if (!file.exists())
                 file.createNewFile();
 
             FileWriter fw = new FileWriter(file);
@@ -329,61 +313,61 @@ public class OutputController {
                     writer.write(finalcache.get(i).get(j));
                 }
             }
-        
+
             writer.close();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
-        } 
-        
+        }
+
     }
-    
+
     /**
-    * This method clears the contents of the cache represented by a table.
-    *
-    */
-    private void clearTable()
-    {
+     * This method clears the contents of the cache represented by a table.
+     *
+     */
+    private void clearTable() {
         output.getItems().clear();
     }
 
     /**
-    * This method sets the cache variable of the OutputController.
-    *
-    * @param cache The cache that will be set as the cache variable of the OutputController   
-    */
-    public void setCache(Cache cache)
-    {
+     * This method sets the cache variable of the OutputController.
+     *
+     * @param cache The cache that will be set as the cache variable of the
+     *              OutputController
+     */
+    public void setCache(Cache cache) {
         this.cache = cache;
     }
 
     /**
-    * This method sets the main memory variable of the OutputController.
-    *
-    * @param mm The main memory that will be set as the main memory variable of the OutputController   
-    */
-    public void setMainMemory(MainMemory mm)
-    {
+     * This method sets the main memory variable of the OutputController.
+     *
+     * @param mm The main memory that will be set as the main memory variable of the
+     *           OutputController
+     */
+    public void setMainMemory(MainMemory mm) {
         this.mm = mm;
     }
-    
+
     /**
-    * This method sets strData of the OutputController, which is the data to be inserted into the cache.
-    *
-    * @param data The data that will be set as the strData of the OutputController
-    */
-    public void setStringData(String[] data)
-    {
+     * This method sets strData of the OutputController, which is the data to be
+     * inserted into the cache.
+     *
+     * @param data The data that will be set as the strData of the OutputController
+     */
+    public void setStringData(String[] data) {
         this.strData = data;
     }
-    
+
     /**
-    * This method sets the number of loops that the data will be inserted into the cache.
-    *
-    * @param numOfLoops An int that will be set as the numOfLoops of the OutputController
-    */
-    public void setNumOfLoops(int numOfLoops)
-    {
+     * This method sets the number of loops that the data will be inserted into the
+     * cache.
+     *
+     * @param numOfLoops An int that will be set as the numOfLoops of the
+     *                   OutputController
+     */
+    public void setNumOfLoops(int numOfLoops) {
         this.numOfLoops = numOfLoops;
     }
 }
