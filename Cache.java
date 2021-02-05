@@ -72,7 +72,7 @@ public class Cache {
 
             for (int j = 0; j < setSize; j++) {
                 age.get(i).add((int) 0);
-                cache.get(i).add((int) 0);
+                cache.get(i).add((int) -1);
                 cacheData.get(i).add("");
             }
         }
