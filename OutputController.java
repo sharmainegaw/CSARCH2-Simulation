@@ -270,7 +270,7 @@ public class OutputController {
         }
 
         this.nData = tempData;
-        this.strData = tempStrData;
+        // this.strData = tempStrData;
     }
 
     /*
