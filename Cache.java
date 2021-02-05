@@ -25,7 +25,7 @@ public class Cache {
     private float cacheAccessTime;
     private float missPenalty;
 
-    private ArrayList<ArrayList<String>> cache;
+    private ArrayList<ArrayList<Integer>> cache;
     private ArrayList<ArrayList<String>> cacheData;
     private ArrayList<ArrayList<Integer>> age;
 
@@ -62,17 +62,17 @@ public class Cache {
     */
     private void initialize() {
         age = new ArrayList<ArrayList<Integer>>(numberOfSets);
-        cache = new ArrayList<ArrayList<String>>(numberOfSets);
+        cache = new ArrayList<ArrayList<Integer>>(numberOfSets);
         cacheData = new ArrayList<ArrayList<String>>(numberOfSets);
 
         for (int i = 0; i < numberOfSets; i++) {
-            cache.add(new ArrayList<String>(setSize));
+            cache.add(new ArrayList<Integer>(setSize));
             age.add(new ArrayList<Integer>(setSize));
             cacheData.add(new ArrayList<String>(setSize));
 
             for (int j = 0; j < setSize; j++) {
                 age.get(i).add((int) 0);
-                cache.get(i).add("");
+                cache.get(i).add((int) 0);
                 cacheData.get(i).add("");
             }
         }
@@ -93,7 +93,7 @@ public class Cache {
         nMinIndex = age.get(nSet).indexOf(Collections.min(age.get(nSet)));
         nMaxIndex = age.get(nSet).indexOf(Collections.max(age.get(nSet)));
 
-        int cacheIndex = isCacheHit(nSet, "" + blockData);
+        int cacheIndex = isCacheHit(nSet, blockData);
 
         // If cache miss
         if (cacheIndex == -1) {
@@ -103,13 +103,13 @@ public class Cache {
             if (nNextIndex == -1)
             {
                 cacheData.get(nSet).set(nMinIndex, strData);
-                cache.get(nSet).set(nMinIndex, "" + blockData);
+                cache.get(nSet).set(nMinIndex, blockData);
             }
             // else, just fill the next empty block
             else
             {
                 cacheData.get(nSet).set(nNextIndex, strData);
-                cache.get(nSet).set(nNextIndex, "" + blockData);
+                cache.get(nSet).set(nNextIndex, blockData);
             }
 
             // set the new age as highest + 1
@@ -165,8 +165,8 @@ public class Cache {
     *
     * @return the index of the block the data is in if it's a cache hit; returns -1 if it's a cache miss
     */
-    private int isCacheHit(int nSet, String strData) {
-        return cache.get(nSet).indexOf(strData);
+    private int isCacheHit(int nSet, int blockData) {
+        return cache.get(nSet).indexOf(blockData);
     }
 
     /**
