@@ -247,20 +247,30 @@ public class OutputController {
      */
     public void setIntegerData(String[] data, boolean dataIsInBlocks, boolean dataIsInHexAddress) {
         int[] tempData = new int[data.length];
+        String[] tempStrData = new String[data.length]; 
 
         if (!dataIsInBlocks) {
             if (dataIsInHexAddress)
                 for (int i = 0; i < data.length; i++) {
                     // convert from hex to decimal, then convert to blocks
                     tempData[i] = cache.convertAddressToBlock(cache.convertHexToDecimal(data[i]));
+                    tempStrData[i] = "" + tempData[i];
+                }
+            else
+                for (int i = 0; i < data.length; i++) {
+                    // convert from hex to decimal, then convert to blocks
+                    tempData[i] = cache.convertAddressToBlock(Integer.parseInt(data[i]));
+                    tempStrData[i] = "" + tempData[i];
                 }
         } else {
             for (int i = 0; i < data.length; i++) {
                 tempData[i] = Integer.parseInt(data[i]);
+                tempStrData[i] = "" + tempData[i];
             }
         }
 
         this.nData = tempData;
+        //this.strData = tempStrData;
     }
 
     /*
