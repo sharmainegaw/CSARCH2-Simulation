@@ -132,7 +132,7 @@ public class Cache {
     * @return   the block `dataInAddress` belongs to
     */
     public int convertAddressToBlock(int dataInAddress) {
-        return (dataInAddress + 1) / blockSize;
+        return (dataInAddress) / blockSize;
     }
 
     /**
